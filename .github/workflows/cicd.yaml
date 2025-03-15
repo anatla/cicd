@@ -45,3 +45,18 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: appleboy/ssh-action@v1.2.2
+
+        with:
+          host: ${{ secrets.SERVER_KEY }}
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/test_cicd
+            docker pull ghcr.io/anatla/cicd:main
+            docker compose restart
